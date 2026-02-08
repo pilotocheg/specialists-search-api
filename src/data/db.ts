@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import type { Database, Subject, Specialist, SpecialistFilters } from "../types/index.js";
 
 let cachedDb: Database | null = null;
@@ -20,6 +20,13 @@ export function loadDatabase(dbPath: string): Database {
   if (!Array.isArray(cachedDb.specialists)) cachedDb.specialists = [];
 
   return cachedDb;
+}
+
+/**
+ * Persist database to JSON file (e.g. after worker updates).
+ */
+export function saveDatabase(dbPath: string, db: Database): void {
+  writeFileSync(dbPath, JSON.stringify(db, null, 2), "utf-8");
 }
 
 /**
